@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harvest Co. — Fresh, seasonal, delivered</title>
+<meta name="description" content="A weekly box of peak-season produce, picked the day before it reaches your door.">
+
+<!-- Google Fonts: Fraunces (display) + Inter (body/utility) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ============ TOKENS ============ */
+  :root{
+    --cream:      #FAF6EC;
+    --cream-dim:  #F1EADA;
+    --forest:     #1B4332;
+    --forest-ink: #10281C;
+    --leaf:       #52B788;
+    --leaf-soft:  #D7ECDF;
+    --citrus:     #F4A259;
+    --clay:       #E76F51;
+    --ink:        #26332C;
+    --ink-soft:   #5C6B62;
+    --line:       rgba(27,67,50,0.14);
+
+    --display: "Fraunces", Georgia, serif;
+    --body:    "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+
+    --radius: 18px;
+    --radius-sm: 10px;
+    --ease: cubic-bezier(.22,.61,.36,1);
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+
+  body{
+    font-family:var(--body);
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  img,svg{ display:block; max-width:100%; }
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  .eyebrow{
+    font-family:var(--body);
+    font-size:0.78rem;
+    font-weight:600;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--leaf);
+  }
+
+  h1,h2,h3{
+    font-family:var(--display);
+    color:var(--forest-ink);
+    line-height:1.08;
+    letter-spacing:-0.01em;
+  }
+
+  section{ position:relative; }
+
+  .fade-in{
+    opacity:0;
+    transform:translateY(22px);
+    transition:opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  }
+  .fade-in.is-visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ============ FOCUS STATES ============ */
+  a:focus-visible, button:focus-visible, input:focus-visible{
+    outline:2px solid var(--clay);
+    outline-offset:3px;
+    border-radius:4px;
+  }
+
+  /* ============ NAV ============ */
+  header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(250,246,236,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 32px;
+    max-width:1180px;
+    margin:0 auto;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-family:var(--display);
+    font-weight:600;
+    font-size:1.25rem;
+    color:var(--forest-ink);
+  }
+  .logo svg{ width:26px; height:26px; }
+  .nav-links{
+    display:flex;
+    gap:36px;
+    font-size:0.94rem;
+    font-weight:500;
+    color:var(--ink-soft);
+  }
+  .nav-links a{ transition:color 0.2s var(--ease); }
+  .nav-links a:hover{ color:var(--forest-ink); }
+  .nav-cta{
+    display:flex; align-items:center; gap:18px;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:12px 24px;
+    border-radius:999px;
+    font-weight:600;
+    font-size:0.92rem;
+    white-space:nowrap;
+    transition:transform 0.25s var(--ease), box-shadow 0.25s var(--ease), background 0.25s var(--ease);
+  }
+  .btn-primary{
+    background:var(--clay);
+    color:#fff;
+    box-shadow:0 8px 20px -8px rgba(231,111,81,0.65);
+  }
+  .btn-primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 26px -8px rgba(231,111,81,0.75);
+  }
+  .btn-ghost{
+    color:var(--forest-ink);
+    font-weight:600;
+    font-size:0.92rem;
+  }
+  .btn-ghost:hover{ color:var(--leaf); }
+  .menu-toggle{ display:none; }
+
+  /* ============ HERO ============ */
+  .hero{
+    padding:96px 0 72px;
+    overflow:hidden;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.05fr 0.95fr;
+    gap:56px;
+    align-items:center;
+  }
+  .hero h1{
+    font-size:clamp(2.6rem, 5vw, 3.9rem);
+    margin:18px 0 22px;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--leaf);
+    font-weight:500;
+  }
+  .hero p.lede{
+    font-size:1.14rem;
+    color:var(--ink-soft);
+    max-width:46ch;
+    margin-bottom:32px;
+  }
+  .hero-actions{
+    display:flex;
+    align-items:center;
+    gap:22px;
+    margin-bottom:38px;
+  }
+  .trust-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    font-size:0.88rem;
+    color:var(--ink-soft);
+  }
+  .avatars{ display:flex; }
+  .avatars span{
+    width:30px; height:30px; border-radius:50%;
+    border:2px solid var(--cream);
+    margin-left:-9px;
+    background:var(--leaf-soft);
+  }
+  .avatars span:first-child{ margin-left:0; }
+
+  .hero-art{ position:relative; }
+  .basket-illustration{
+    animation:sway 7s ease-in-out infinite;
+    transform-origin:50% 85%;
+  }
+  @keyframes sway{
+    0%,100%{ transform:rotate(-1deg); }
+    50%{ transform:rotate(1.3deg); }
+  }
+  .leaf-wiggle{ transform-origin:center; transition:transform 0.4s var(--ease); }
+  .hero-art:hover .leaf-wiggle{ transform:rotate(-8deg) translateY(-3px); }
+
+  .floating-badge{
+    position:absolute;
+    background:#fff;
+    border-radius:var(--radius-sm);
+    padding:12px 16px;
+    box-shadow:0 16px 40px -18px rgba(27,67,50,0.35);
+    font-size:0.85rem;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .badge-top{ top:6%; right:2%; color:var(--forest-ink); }
+  .badge-bottom{ bottom:8%; left:0%; color:var(--forest-ink); }
+  .dot{ width:8px; height:8px; border-radius:50%; background:var(--leaf); }
+  .dot.orange{ background:var(--clay); }
+
+  /* ============ TICKER (signature element) ============ */
+  .ticker{
+    background:var(--forest);
+    padding:16px 0;
+    overflow:hidden;
+    white-space:nowrap;
+    border-top:1px solid rgba(255,255,255,0.08);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .ticker-track{
+    display:inline-flex;
+    gap:0;
+    animation:scroll-left 32s linear infinite;
+  }
+  @keyframes scroll-left{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+  .ticker-item{
+    display:inline-flex;
+    align-items:center;
+    gap:14px;
+    padding:0 28px;
+    font-family:var(--display);
+    font-style:italic;
+    font-weight:500;
+    font-size:1.15rem;
+    color:var(--leaf-soft);
+  }
+  .ticker-item::after{
+    content:"◆";
+    font-size:0.5rem;
+    color:var(--citrus);
+    margin-left:28px;
+  }
+
+  /* ============ SECTION HEADS ============ */
+  .section-head{
+    max-width:640px;
+    margin-bottom:52px;
+  }
+  .section-head h2{
+    font-size:clamp(1.9rem, 3.4vw, 2.6rem);
+    margin-top:14px;
+  }
+  .section-head p{
+    color:var(--ink-soft);
+    font-size:1.04rem;
+    margin-top:14px;
+  }
+  .center{ text-align:center; margin-left:auto; margin-right:auto; }
+
+  /* ============ FEATURES ============ */
+  .features{ padding:100px 0; }
+  .feature-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:24px;
+  }
+  .feature-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:34px 28px;
+    transition:transform 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
+  }
+  .feature-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 44px -24px rgba(27,67,50,0.28);
+    border-color:transparent;
+  }
+  .feature-icon{
+    width:48px; height:48px;
+    border-radius:12px;
+    background:var(--leaf-soft);
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:20px;
+  }
+  .feature-card:nth-child(2) .feature-icon{ background:#FDE9DA; }
+  .feature-card:nth-child(3) .feature-icon{ background:var(--leaf-soft); }
+  .feature-card h3{
+    font-size:1.28rem;
+    margin-bottom:10px;
+    font-weight:600;
+  }
+  .feature-card p{ color:var(--ink-soft); font-size:0.98rem; }
+
+  /* ============ HOW IT WORKS ============ */
+  .how{
+    padding:100px 0;
+    background:var(--cream-dim);
+  }
+  .how-steps{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:0;
+    position:relative;
+    counter-reset:step;
+  }
+  .how-steps::before{
+    content:"";
+    position:absolute;
+    top:26px;
+    left:8%;
+    right:8%;
+    height:1px;
+    background:repeating-linear-gradient(to right, var(--line) 0 8px, transparent 8px 16px);
+    z-index:0;
+  }
+  .step{
+    position:relative;
+    z-index:1;
+    padding:0 24px;
+  }
+  .step-num{
+    width:52px; height:52px;
+    border-radius:50%;
+    background:var(--forest);
+    color:var(--cream);
+    font-family:var(--display);
+    font-weight:600;
+    font-size:1.2rem;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:22px;
+  }
+  .step:nth-child(2) .step-num{ background:var(--clay); }
+  .step h3{ font-size:1.2rem; margin-bottom:10px; }
+  .step p{ color:var(--ink-soft); font-size:0.96rem; }
+
+  /* ============ QUOTE ============ */
+  .quote{
+    padding:110px 0;
+    text-align:center;
+  }
+  .quote blockquote{
+    font-family:var(--display);
+    font-style:italic;
+    font-weight:500;
+    font-size:clamp(1.5rem, 3.4vw, 2.3rem);
+    color:var(--forest-ink);
+    max-width:780px;
+    margin:0 auto 28px;
+    line-height:1.35;
+  }
+  .quote cite{
+    font-style:normal;
+    font-size:0.92rem;
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+
+  /* ============ PRICING ============ */
+  .pricing{ padding:100px 0; }
+  .price-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:24px;
+    align-items:stretch;
+  }
+  .price-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:36px 30px;
+    display:flex;
+    flex-direction:column;
+    transition:transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  }
+  .price-card:hover{ transform:translateY(-6px); box-shadow:0 20px 44px -24px rgba(27,67,50,0.24); }
+  .price-card.featured{
+    background:var(--forest);
+    color:var(--cream);
+    position:relative;
+    overflow:hidden;
+  }
+  .price-card.featured::before{
+    content:"Most popular";
+    position:absolute;
+    top:16px; right:-34px;
+    background:var(--clay);
+    color:#fff;
+    font-size:0.72rem;
+    font-weight:700;
+    letter-spacing:0.06em;
+    padding:5px 40px;
+    transform:rotate(38deg);
+  }
+  .price-card.featured h3, .price-card.featured .price-sub{ color:var(--cream); }
+  .price-card h3{ font-size:1.3rem; margin-bottom:6px; }
+  .price-sub{ color:var(--ink-soft); font-size:0.92rem; margin-bottom:22px; }
+  .price-amount{
+    font-family:var(--display);
+    font-size:2.6rem;
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  .price-amount span{ font-size:1rem; font-weight:400; opacity:0.7; }
+  .price-list{ margin:26px 0 30px; flex-grow:1; }
+  .price-list li{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    font-size:0.92rem;
+    margin-bottom:12px;
+    color:inherit;
+  }
+  .price-card:not(.featured) .price-list li{ color:var(--ink-soft); }
+  .check{ color:var(--leaf); font-weight:700; flex-shrink:0; }
+  .price-card.featured .check{ color:var(--citrus); }
+  .price-card .btn{ width:100%; }
+  .price-card:not(.featured) .btn-primary{
+    background:var(--forest);
+    box-shadow:none;
+  }
+  .price-card:not(.featured) .btn-primary:hover{ background:var(--forest-ink); }
+
+  /* ============ CTA BANNER ============ */
+  .cta-banner{
+    background:var(--forest);
+    border-radius:28px;
+    margin:0 auto 100px;
+    max-width:1180px;
+    padding:72px 56px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .cta-banner h2{
+    color:var(--cream);
+    font-size:clamp(1.8rem, 3.6vw, 2.5rem);
+    margin-bottom:16px;
+  }
+  .cta-banner p{
+    color:rgba(250,246,236,0.72);
+    max-width:480px;
+    margin:0 auto 32px;
+  }
+  .cta-banner .blob{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(60px);
+    opacity:0.35;
+  }
+  .cta-banner .blob-1{ width:280px; height:280px; background:var(--leaf); top:-90px; left:-60px; }
+  .cta-banner .blob-2{ width:220px; height:220px; background:var(--citrus); bottom:-80px; right:-40px; }
+
+  /* ============ FOOTER ============ */
+  footer{
+    padding:64px 0 36px;
+    border-top:1px solid var(--line);
+  }
+  .footer-grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr 1fr 1.2fr;
+    gap:40px;
+    margin-bottom:48px;
+  }
+  .footer-brand p{
+    color:var(--ink-soft);
+    font-size:0.92rem;
+    margin:14px 0 20px;
+    max-width:32ch;
+  }
+  .footer-col h4{
+    font-size:0.85rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:0.07em;
+    color:var(--forest-ink);
+    margin-bottom:16px;
+  }
+  .footer-col li{ margin-bottom:11px; }
+  .footer-col a{
+    color:var(--ink-soft);
+    font-size:0.94rem;
+    transition:color 0.2s var(--ease);
+  }
+  .footer-col a:hover{ color:var(--clay); }
+  .newsletter-form{
+    display:flex;
+    gap:8px;
+    margin-top:6px;
+  }
+  .newsletter-form input{
+    flex:1;
+    padding:11px 14px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    font-size:0.9rem;
+    background:#fff;
+    color:var(--ink);
+  }
+  .newsletter-form input::placeholder{ color:var(--ink-soft); }
+  .newsletter-form .btn-primary{ padding:11px 18px; }
+  .form-note{ font-size:0.8rem; color:var(--ink-soft); margin-top:10px; }
+  .footer-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding-top:28px;
+    border-top:1px solid var(--line);
+    font-size:0.85rem;
+    color:var(--ink-soft);
+  }
+  .footer-socials{ display:flex; gap:16px; }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px){
+    .nav-links{ display:none; }
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-art{ order:-1; max-width:420px; margin:0 auto; }
+    .feature-grid, .price-grid{ grid-template-columns:1fr; }
+    .how-steps{ grid-template-columns:1fr; gap:36px; }
+    .how-steps::before{ display:none; }
+    .footer-grid{ grid-template-columns:1fr 1fr; }
+    .cta-banner{ margin-left:20px; margin-right:20px; padding:56px 28px; }
+  }
+  @media (max-width: 560px){
+    .wrap{ padding:0 20px; }
+    .footer-grid{ grid-template-columns:1fr; }
+    .footer-bottom{ flex-direction:column; gap:14px; }
+    .hero{ padding:64px 0 48px; }
+    .hero-actions{ flex-wrap:wrap; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <a class="logo" href="#top">
+      <svg viewBox="0 0 32 32" fill="none">
+        <path d="M16 4C10 4 6 9 6 15c0 7 5 13 10 13s10-6 10-13c0-6-4-11-10-11z" fill="#52B788"/>
+        <path d="M16 4c1 3 1 7-2 11" stroke="#1B4332" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M20 3c1.5 1.5 1 4-1 5" fill="#E76F51"/>
+      </svg>
+      Harvest Co.
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Why it works</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#pricing">Plans</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="btn-ghost" href="#pricing">Sign in</a>
+      <a class="btn btn-primary" href="#pricing">Start your box</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Delivered Tuesdays &amp; Fridays</span>
+        <h1>Produce picked <em>yesterday</em>, not last week.</h1>
+        <p class="lede">Harvest Co. sources direct from 40 regional growers and packs your box within 24 hours of picking — so what lands on your counter still tastes like it just came off the vine.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#pricing">Start your box — from $29/wk</a>
+          <a class="btn-ghost" href="#how">See how it works ↓</a>
+        </div>
+        <div class="trust-row">
+          <div class="avatars">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <span>Joined by 12,400+ households across the Northeast</span>
+        </div>
+      </div>
+
+      <div class="hero-art">
+        <svg class="basket-illustration" viewBox="0 0 420 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- basket -->
+          <path d="M70 190 L110 340 Q210 370 310 340 L350 190 Z" fill="#FFFDF8" stroke="#1B4332" stroke-width="3"/>
+          <path d="M70 190 L350 190" stroke="#1B4332" stroke-width="3"/>
+          <path d="M90 210 L330 210 M100 240 L320 240 M108 270 L312 270 M116 300 L304 300" stroke="#D7ECDF" stroke-width="3"/>
+          <path d="M130 190 C130 140 160 110 210 110 C260 110 290 140 290 190" stroke="#1B4332" stroke-width="3" fill="none"/>
+
+          <!-- carrot -->
+          <g class="leaf-wiggle">
+            <path d="M190 195 L205 105 L225 195 Z" fill="#E76F51"/>
+            <path d="M210 105 C202 88 195 78 186 70 M212 103 C214 84 217 72 220 60 M215 106 C224 92 232 82 240 74" stroke="#52B788" stroke-width="4" stroke-linecap="round" fill="none"/>
+          </g>
+
+          <!-- kale bunch -->
+          <g class="leaf-wiggle">
+            <ellipse cx="150" cy="150" rx="34" ry="26" fill="#52B788" transform="rotate(-18 150 150)"/>
+            <ellipse cx="170" cy="130" rx="26" ry="20" fill="#74C69D" transform="rotate(10 170 130)"/>
+          </g>
+
+          <!-- orange -->
+          <circle cx="260" cy="150" r="30" fill="#F4A259"/>
+          <path d="M260 122 L260 135 M248 130 L258 138 M272 130 L262 138" stroke="#1B4332" stroke-width="2.5" stroke-linecap="round"/>
+
+          <!-- radish -->
+          <g>
+            <ellipse cx="225" cy="165" rx="14" ry="18" fill="#E76F51"/>
+            <path d="M225 148 C220 135 224 125 230 118 M222 149 C214 140 210 132 205 122" stroke="#52B788" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          </g>
+        </svg>
+
+        <div class="floating-badge badge-top">
+          <span class="dot"></span> Picked within 24h
+        </div>
+        <div class="floating-badge badge-bottom">
+          <span class="dot orange"></span> Zero plastic packaging
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TICKER ============ -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span class="ticker-item">Heirloom Tomatoes</span>
+      <span class="ticker-item">Tuscan Kale</span>
+      <span class="ticker-item">Honeycrisp Apples</span>
+      <span class="ticker-item">Rainbow Chard</span>
+      <span class="ticker-item">French Breakfast Radish</span>
+      <span class="ticker-item">Delicata Squash</span>
+      <span class="ticker-item">Cara Cara Oranges</span>
+      <!-- duplicate set for seamless loop -->
+      <span class="ticker-item">Heirloom Tomatoes</span>
+      <span class="ticker-item">Tuscan Kale</span>
+      <span class="ticker-item">Honeycrisp Apples</span>
+      <span class="ticker-item">Rainbow Chard</span>
+      <span class="ticker-item">French Breakfast Radish</span>
+      <span class="ticker-item">Delicata Squash</span>
+      <span class="ticker-item">Cara Cara Oranges</span>
+    </div>
+  </div>
+
+  <!-- ============ FEATURES ============ -->
+  <section class="features" id="features">
+    <div class="wrap">
+      <div class="section-head fade-in">
+        <span class="eyebrow">Why households switch</span>
+        <h2>Freshness is a supply chain problem. We just solved it.</h2>
+        <p>Most produce sits in distribution centers for 5–9 days before it reaches a store shelf. We cut out that middle stretch entirely.</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 22c-4-3-7-7-7-12a7 7 0 0 1 14 0c0 5-3 9-7 12z" stroke="#1B4332" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Picked at peak</h3>
+          <p>Every item is harvested within a day of packing, at the point growers consider it ready — not before, for shelf life.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 7h13l3 5v6h-3M3 7v11h3M3 7l2-4h9l2 4M8 21a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM17 21a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" stroke="#E76F51" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>40 regional growers</h3>
+          <p>We route each box from the closest available farm, so nothing travels further than it has to.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v4l-2 12H6L4 8V4z" stroke="#1B4332" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Compostable, always</h3>
+          <p>Boxes, liners and labels break down in a home compost bin — no plastic clamshells, ever.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="how" id="how">
+    <div class="wrap">
+      <div class="section-head fade-in">
+        <span class="eyebrow">Getting started</span>
+        <h2>Three steps, then it's on autopilot.</h2>
+      </div>
+      <div class="how-steps">
+        <div class="step fade-in">
+          <div class="step-num">1</div>
+          <h3>Choose your box</h3>
+          <p>Pick a size and tell us what you never want to see (we're looking at you, beets).</p>
+        </div>
+        <div class="step fade-in">
+          <div class="step-num">2</div>
+          <h3>We build it fresh</h3>
+          <p>Our routing pulls from whichever nearby farm harvested that item most recently.</p>
+        </div>
+        <div class="step fade-in">
+          <div class="step-num">3</div>
+          <h3>It shows up, weekly</h3>
+          <p>Pause, skip, or swap any week from your account — no calls, no fees.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ QUOTE ============ -->
+  <section class="quote">
+    <div class="wrap">
+      <blockquote class="fade-in">"I stopped meal-planning around what I had. Now I plan around what showed up that morning — it's a better way to cook."</blockquote>
+      <cite class="fade-in">— Priya N., subscriber since 2023</cite>
+    </div>
+  </section>
+
+  <!-- ============ PRICING ============ -->
+  <section class="pricing" id="pricing">
+    <div class="wrap">
+      <div class="section-head center fade-in">
+        <span class="eyebrow">Plans</span>
+        <h2>Pick a size. Change it any week.</h2>
+        <p>Every plan ships weekly with free delivery. Cancel any time, no contract.</p>
+      </div>
+      <div class="price-grid">
+        <div class="price-card fade-in">
+          <h3>The Snack Box</h3>
+          <p class="price-sub">For one, or a light week</p>
+          <div class="price-amount">$29<span>/week</span></div>
+          <ul class="price-list">
+            <li><span class="check">✓</span> 6–7 seasonal items</li>
+            <li><span class="check">✓</span> Free weekly delivery</li>
+            <li><span class="check">✓</span> Swap up to 2 items</li>
+          </ul>
+          <a class="btn btn-primary" href="#">Choose Snack Box</a>
+        </div>
+        <div class="price-card featured fade-in">
+          <h3>The Household Box</h3>
+          <p class="price-sub">For 2–4 people cooking most nights</p>
+          <div class="price-amount">$49<span>/week</span></div>
+          <ul class="price-list">
+            <li><span class="check">✓</span> 12–14 seasonal items</li>
+            <li><span class="check">✓</span> Free weekly delivery</li>
+            <li><span class="check">✓</span> Unlimited swaps</li>
+            <li><span class="check">✓</span> One recipe card included</li>
+          </ul>
+          <a class="btn btn-primary" href="#">Choose Household Box</a>
+        </div>
+        <div class="price-card fade-in">
+          <h3>The Harvest Table</h3>
+          <p class="price-sub">For big households and big meals</p>
+          <div class="price-amount">$79<span>/week</span></div>
+          <ul class="price-list">
+            <li><span class="check">✓</span> 20+ seasonal items</li>
+            <li><span class="check">✓</span> Free priority delivery</li>
+            <li><span class="check">✓</span> Unlimited swaps</li>
+            <li><span class="check">✓</span> Add-on pantry staples</li>
+          </ul>
+          <a class="btn btn-primary" href="#">Choose Harvest Table</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA BANNER ============ -->
+  <section>
+    <div class="cta-banner fade-in">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <h2>Your first box ships this Friday.</h2>
+      <p>Order by Wednesday at midnight to lock in this week's harvest window.</p>
+      <a class="btn btn-primary" href="#pricing">Start your box</a>
+    </div>
+  </section>
+
+</main>
+
+<footer id="faq">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="#top">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M16 4C10 4 6 9 6 15c0 7 5 13 10 13s10-6 10-13c0-6-4-11-10-11z" fill="#52B788"/>
+          </svg>
+          Harvest Co.
+        </a>
+        <p>A weekly box of peak-season produce, routed from the nearest grower and packed the day it's picked.</p>
+        <form class="newsletter-form" onsubmit="return false;">
+          <label for="newsletter-email" class="sr-only" style="position:absolute;left:-9999px;">Email address</label>
+          <input id="newsletter-email" type="email" placeholder="you@example.com" required>
+          <button class="btn btn-primary" type="submit">Join</button>
+        </form>
+        <p class="form-note">One email a week: what's in season near you.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Why it works</a></li>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#pricing">Plans</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">Our growers</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Manage subscription</a></li>
+          <li><a href="#">Delivery areas</a></li>
+          <li><a href="#">Contact us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Harvest Co. All rights reserved.</span>
+      <div class="footer-socials">
+        <a href="#" aria-label="Instagram">Instagram</a>
+        <a href="#" aria-label="TikTok">TikTok</a>
+        <a href="#" aria-label="Email">Email</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll-triggered fade-in reveal for sections
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Simple newsletter form feedback (no backend — front-end only demo)
+  const form = document.querySelector('.newsletter-form');
+  if (form){
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = form.querySelector('input');
+      const btn = form.querySelector('button');
+      if (input.value.trim()){
+        btn.textContent = 'Added ✓';
+        input.value = '';
+        setTimeout(() => { btn.textContent = 'Join'; }, 2200);
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
